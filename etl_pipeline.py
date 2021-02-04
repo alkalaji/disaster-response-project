@@ -1,4 +1,5 @@
 # import libraries
+import sys
 import pandas as pd
 from sqlalchemy import create_engine
 
@@ -51,23 +52,32 @@ def create_dataframe(messages, categories):
     return df
 
 
-def write_to_db(df: pd.DataFrame):
+def write_to_db(df: pd.DataFrame, db_name):
     try:
-        engine = create_engine('sqlite:///disaster_response.db')
+        engine = create_engine('sqlite:///' + db_name)
         df.to_sql('messages_and_categories', engine, index=False)
     except:
         print('Failed to write to database')
 
 
 if __name__ == '__main__':
+    messages_path = './messages.csv'
+    categories_path = './categories.csv'
+    database_name = 'DisasterResponse.db'
+
+    if len(sys.argv) == 4:
+        messages_path = sys.argv[1]
+        categories_path = sys.argv[2]
+        database_name = sys.argv[3]
+
     print('Starting ETL Pipeline')
 
     # load messages dataset
-    print('Loading "messages.csv"')
-    messages = load_dataset('./messages.csv', 'id')
+    print('Loading "{}"'.format(messages_path))
+    messages = load_dataset(messages_path, 'id')
     # load categories dataset
-    print('Loading "categories.csv"')
-    categories = load_dataset('./categories.csv', 'id')
+    print('Loading "{}"'.format((categories_path)))
+    categories = load_dataset(categories_path, 'id')
 
     # clean categories
     print('Cleaning categories')
@@ -79,6 +89,6 @@ if __name__ == '__main__':
 
     # write to database
     print('Writing to database')
-    write_to_db(df)
+    write_to_db(df, database_name)
 
     print('Finished ETL pipeline')
