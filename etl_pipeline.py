@@ -5,6 +5,16 @@ from sqlalchemy import create_engine
 
 
 def load_dataset(path, index_col):
+    '''
+    Loads a dataset from a CSV file
+
+            Parameters:
+                    path(str): CSV file path
+                    index_col (str): name of column to use as index
+
+            Returns:
+                    df (pd.DataFrame): DataFrame of the dataset
+    '''
     df = None
     try:
         df = pd.read_csv(path, index_col=index_col)
@@ -14,6 +24,15 @@ def load_dataset(path, index_col):
 
 
 def clean_categories(categories: pd.DataFrame):
+    '''
+    Clean categories dataset columns and values
+
+            Parameters:
+                    categories(pd.DataFrame): CSV file path
+
+            Returns:
+                    categories (pd.DataFrame): DataFrame of the dataset
+    '''
     # create a dataframe of the 36 individual category columns
     categories = categories.categories.str.split(pat=';', expand=True)
 
@@ -37,6 +56,16 @@ def clean_categories(categories: pd.DataFrame):
 
 
 def create_dataframe(messages, categories):
+    '''
+    Create full dataset combining messages and categories
+
+            Parameters:
+                    messages(pd.DataFrame): the messages dataset
+                    categories(pd.DataFrame): the categories dataset
+
+            Returns:
+                    df (pd.DataFrame): DataFrame containing the full dataset
+    '''
     # merge datasets
     df = pd.merge(messages, categories, how='inner', left_on='id', right_on='id')
 
@@ -53,24 +82,32 @@ def create_dataframe(messages, categories):
 
 
 def write_to_db(df: pd.DataFrame, db_name):
+    '''
+    Write dataframe to database
+
+            Parameters:
+                    df(pd.DataFrame): the dataframe to be written to db
+                    db_name(str): name of the database
+    '''
     try:
         engine = create_engine('sqlite:///' + db_name)
-        df.to_sql('messages_and_categories', engine, index=False)
+        df.to_sql('messages_and_categories', engine, index=False, if_exists='replace')
     except:
         print('Failed to write to database')
 
 
-if __name__ == '__main__':
-    messages_path = './messages.csv'
-    categories_path = './categories.csv'
-    database_name = 'DisasterResponse.db'
+def main():
+    # default paths in case no arguments were provided
+    messages_path = './data/messages.csv'
+    categories_path = './data/categories.csv'
+    database_name = './data/DisasterResponse.db'
 
     if len(sys.argv) == 4:
         messages_path = sys.argv[1]
         categories_path = sys.argv[2]
         database_name = sys.argv[3]
 
-    print('Starting ETL Pipeline')
+    print('Starting ETL pipeline')
 
     # load messages dataset
     print('Loading "{}"'.format(messages_path))
@@ -92,3 +129,7 @@ if __name__ == '__main__':
     write_to_db(df, database_name)
 
     print('Finished ETL pipeline')
+
+
+if __name__ == '__main__':
+    main()
