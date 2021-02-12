@@ -85,17 +85,12 @@ def display_results(cv, y_test, y_pred):
     for i in range(y_test.shape[1]):
         col = y_test.iloc[:, i]
 
-        # Average the scores in case there were more then 2 classes, which is the case for 'related' column
-        average_the_scores = 'binary'
-        if len(np.unique(col)) > 2:
-            average_the_scores = 'micro'
-
         print('Label name: ', col.name)
         print('Label values:', np.unique(col))
         print('Accuracy: ', accuracy_score(col, y_pred[:, i]))
-        print('F1 score: ', f1_score(col, y_pred[:, i], average=average_the_scores, zero_division=0))
-        print('Precision:', precision_score(col, y_pred[:, i], average=average_the_scores, zero_division=0))
-        print('recall:', recall_score(col, y_pred[:, i], average=average_the_scores, zero_division=0))
+        print('F1 score: ', f1_score(col, y_pred[:, i], zero_division=0))
+        print('Precision:', precision_score(col, y_pred[:, i], zero_division=0))
+        print('recall:', recall_score(col, y_pred[:, i], zero_division=0))
         print('-----------------------')
 
     # This is in case what was being passed is just a model not as a result of gridserch
@@ -120,21 +115,21 @@ def build_model(search_method=None):
     pipeline = Pipeline([
         ('vect', CountVectorizer(tokenizer=tokenize)),
         ('tfidf', TfidfTransformer()),
-        ('clf', MultiOutputClassifier(RandomForestClassifier(), n_jobs=-1)),
+        ('clf', MultiOutputClassifier(RandomForestClassifier(n_jobs=-1), n_jobs=-1)),
     ])
 
     # The parameters were commented out because the execution time was very long on my machine
     # Only kept one to showcase that the implementation works
     parameters = {
         # 'vect__ngram_range': ((1, 1), (1, 2)),
-        # 'vect__max_df': (0.5, 0.75, 1.0),
+        'vect__max_df': (0.5, 0.75, 1.0),
         # 'vect__max_features': (None, 5000, 10000),
         'tfidf__use_idf': (True, False)
     }
 
     if search_method == 'grid':
         print('Using GridSearchCV')
-        cv = GridSearchCV(pipeline, param_grid=parameters, verbose=2)
+        cv = GridSearchCV(pipeline, param_grid=parameters, scoring='f1_micro', verbose=3)
     elif search_method == 'randomized':
         print('Using RandomizedSearchCV')
         cv = RandomizedSearchCV(pipeline, param_distributions=parameters, verbose=2)
