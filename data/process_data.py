@@ -52,6 +52,12 @@ def clean_categories(categories: pd.DataFrame):
 
         # convert column from string to numeric
         categories[column] = pd.to_numeric(categories[column])
+
+        # Remove rows that have value 2 in related column
+        # There are 193 valuess. which is insignificant if we drop,
+        # given that they don't hold a special meaning
+        categories = categories.drop(index=categories[categories.related == 2].index)
+
     return categories
 
 
