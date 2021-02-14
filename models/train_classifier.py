@@ -158,7 +158,7 @@ def save_model(model, path):
 def main():
     # default paths in case no arguments were provided
     database_name = './data/DisasterResponse.db'
-    model_file_path = './models/best_model.pkl'
+    model_file_path = './models/classifier.pkl'
 
 
     if len(sys.argv) == 4:

@@ -36,8 +36,8 @@ df = pd.read_sql_table('messages_and_categories', engine)
 # I was having an issue with joblib causing exceptions, so I directly used pickle insted
 # I know this is not a best practice bcause you don't want to halt your
 # page loading to do some heavy background task. But his is just a work around for now
-# model = joblib.load("../models/best_model.pkl")
-model = pickle.load(open("../models/best_model.pkl", "rb"))
+# model = joblib.load("../models/classifier.pkl")
+model = pickle.load(open("../models/classifier.pkl", "rb"))
 
 
 # index webpage displays cool visuals and receives user input text for model

@@ -26,3 +26,5 @@ Once a disaster strikes anywhere, people usually send out messages whether over 
     `python run.py`
 
 3. Go to http://127.0.0.1:3001/
+
+###### Please note: If training the model (running the ml pipeline) is taking a very long time, please consider commenting out one of the parameters options for grid search. You can also, disable the use of grid search if needed.
