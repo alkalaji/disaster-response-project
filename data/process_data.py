@@ -104,8 +104,8 @@ def write_to_db(df: pd.DataFrame, db_name):
 
 def main():
     # default paths in case no arguments were provided
-    messages_path = './data/messages.csv'
-    categories_path = './data/categories.csv'
+    messages_path = './data/disaster_messages.csv'
+    categories_path = './data/disaster_categories.csv'
     database_name = './data/DisasterResponse.db'
 
     if len(sys.argv) == 4:
