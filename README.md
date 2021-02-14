@@ -10,7 +10,7 @@ Once a disaster strikes anywhere, people usually send out messages whether over 
         - The databasse file into which the dataset will be loaded
    - models: Contains the ML pipeline which will: 
         - Read the data from the database
-        - Preprocess the data. Given that it is textual data, it will convert it to lower case, remove special characters, tokenize, remove stop words, stem and lemmatize
+        - Preprocess the data. Given that it is textual data, it will convert it to lower case, remove special characters, tokenize, remove stop words and lemmatize
         - Build a machine learning pipeline for multi-class classification relying on random forest at its heart. Also, it utilizes grid search to tune parameters to maximize f1-score
         - Finally it outputs the model performance and saves the best model as a pickle file
 

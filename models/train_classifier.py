@@ -37,7 +37,6 @@ def load_from_db(database_name):
     return X, y
 
 
-
 def tokenize(text):
     '''
     Tokenize function performs multiple preprocessing steps:
@@ -46,7 +45,6 @@ def tokenize(text):
         - Tokenizes text
         - Removes stop words
         - Lemmatize
-        - Stem
 
             Parameters:
                     text (str): a message to be tokenized
@@ -61,11 +59,10 @@ def tokenize(text):
     # Tokenize
     text = word_tokenize(text)
 
-    # Remove stop words, stem and lemmatize.
+    # Remove stop words lemmatize.
     # Those were combined in order not to iterate multiple times
-    stemmer = PorterStemmer()
     lemmatizer = WordNetLemmatizer()
-    text = [stemmer.stem(lemmatizer.lemmatize(w.strip()))
+    text = [lemmatizer.lemmatize(w.strip())
             for w in text if w not in stopwords.words("english")]
     return text
 
